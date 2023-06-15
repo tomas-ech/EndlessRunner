@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     private Animator playerAnim;
 
     [Header("Player Movement")]
+    [SerializeField] private bool playerUnlocked;
     public float movementSpeed;
     public float jumpForce;
     
@@ -34,7 +35,10 @@ public class Player : MonoBehaviour
         CheckInput();
         CheckCollision();
 
-        rb.velocity = new Vector2(movementSpeed * movingInput, rb.velocity.y);
+        if (playerUnlocked)
+        {
+            rb.velocity = new Vector2(movementSpeed, rb.velocity.y);
+        }
 
 
     }
@@ -42,7 +46,7 @@ public class Player : MonoBehaviour
     private void AnimatorControllers()
     {
         isRunning = rb.velocity.x != 0;
-        playerAnim.SetBool("isRunning", isRunning);
+        playerAnim.SetFloat("xVelocity", rb.velocity.x);
         playerAnim.SetBool("isGrounded", isGrounded);
         playerAnim.SetFloat("yVelocity", rb.velocity.y);
     }
