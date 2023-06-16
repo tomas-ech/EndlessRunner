@@ -26,14 +26,13 @@ public class Player : MonoBehaviour
 
     [Header("Collision Info")]
     [SerializeField] private float groundCheckDistance;
+    [SerializeField] private float ceilingCheckDistance;
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private Vector2 wallCheckSize;
     private bool isGrounded;
     private bool isWallDetected;
-
-
-    private bool isRunning;
+    private bool ceilingDetected; 
 
     void Start()
     {
@@ -65,7 +64,7 @@ public class Player : MonoBehaviour
 
     private void CheckForSlide()
     {
-        if (slideTimerCounter < 0)
+        if (slideTimerCounter < 0 && !ceilingDetected)
         {
             isSliding = false;
         }
@@ -98,6 +97,8 @@ public class Player : MonoBehaviour
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
 
         isWallDetected = Physics2D.BoxCast(wallCheck.position, wallCheckSize, 0f, Vector2.zero, 0f, whatIsGround);
+
+        ceilingDetected = Physics2D.Raycast(transform.position, Vector2.up, ceilingCheckDistance, whatIsGround);
     }
 
     private void CheckInput()
@@ -139,6 +140,8 @@ public class Player : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y - groundCheckDistance));
+
+        Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y + ceilingCheckDistance));
 
         Gizmos.DrawWireCube(wallCheck.position, wallCheckSize);
     }

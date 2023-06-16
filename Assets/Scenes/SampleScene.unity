@@ -2740,7 +2740,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 153194153}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.503496, y: 4.3199983, z: -10}
+  m_LocalPosition: {x: 13.498889, y: 4.3199983, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7863,6 +7863,7 @@ MonoBehaviour:
   slideTimer: 0.5
   slideCooldown: 2
   groundCheckDistance: 1.4
+  ceilingCheckDistance: 1
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
@@ -9072,7 +9073,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.503496, y: 4.3199983, z: -10}
+  m_LocalPosition: {x: 13.498889, y: 4.3199983, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
