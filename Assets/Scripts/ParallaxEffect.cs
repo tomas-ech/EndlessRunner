@@ -7,9 +7,11 @@ public class ParallaxEffect : MonoBehaviour
     private GameObject cam;
 
     [SerializeField] private float parallax;
+    [SerializeField] private float zPosition;
 
     private float length;
     private float xPosition;
+
 
     void Start()
     {
@@ -24,7 +26,7 @@ public class ParallaxEffect : MonoBehaviour
         float distanceMoved = cam.transform.position.x * (1 - parallax);
         float distanceToMove = cam.transform.position.x * parallax;
 
-        transform.position = new Vector3(xPosition + distanceToMove, transform.position.y);
+        transform.position = new Vector3(xPosition + distanceToMove, transform.position.y, zPosition);
 
         if (distanceMoved > xPosition + length)
         {
