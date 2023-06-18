@@ -12,8 +12,12 @@ public class Player : MonoBehaviour
     [Header("Speed Info")]
     [SerializeField] private float maxSpeed;
     [SerializeField] private float speedMultiplier;
+    private float defaultMilestoneIncreaser;
+    private float  defaultSpeed;
+    [Space]
     [SerializeField] private float milestoneIncreaser;
     private float speedMilestone;
+
 
     [Header("Move Info")]
     [SerializeField] private bool playerUnlocked;
@@ -57,6 +61,8 @@ public class Player : MonoBehaviour
         playerAnim = GetComponent<Animator>();
 
         speedMilestone = milestoneIncreaser;
+        defaultSpeed = movementSpeed;
+        defaultMilestoneIncreaser = milestoneIncreaser;
     }
 
     void Update()
@@ -82,34 +88,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void CheckForSlide()
+#region SpeedControll
+    private void SpeedReset()
     {
-        if (slideTimerCounter < 0 && !ceilingDetected)
-        {
-            isSliding = false;
-        }
+        movementSpeed = defaultSpeed;
+        milestoneIncreaser = defaultMilestoneIncreaser;
     }
-
-    private void CheckForLedge()
-    {
-        if (ledgeDetected && canGrabLedge)
-        {
-            canGrabLedge = false;
-
-            Vector2 ledgePosition = GetComponentInChildren<LedgeDetection>().transform.position;
-
-            climbBegunPosition = ledgePosition + offset1;
-            climbOverPosition = ledgePosition + offset2;
-
-            canClimb = true;
-        }
-
-        if (canClimb)
-        {
-            transform.position = climbBegunPosition;
-        }
-    }
-
     private void SpeedController()
     {
         if (movementSpeed == maxSpeed)
@@ -130,25 +114,47 @@ public class Player : MonoBehaviour
             }
         }
     }
+#endregion
 
-    private void PlayerMovement()
+#region Slide Mechanic
+    private void CheckForSlide()
     {
-
-        if (isWallDetected)
+        if (slideTimerCounter < 0 && !ceilingDetected)
         {
-            return;
-        }
-
-        if (isSliding)
-        {
-            rb.velocity = new Vector2(slideSpeed, rb.velocity.y);
-        }
-        else
-        {
-            rb.velocity = new Vector2(movementSpeed, rb.velocity.y);
+            isSliding = false;
         }
     }
+    private void SlideMechanic()
+    {
+        if (rb.velocity.x != 0  && slideCooldownCounter < 0)
+        {
+            isSliding = true;
+            slideTimerCounter = slideTimer;
+            slideCooldownCounter = slideCooldown;
+        }
+    }
+#endregion
 
+#region Climb Mechanic
+    private void CheckForLedge()
+    {
+        if (ledgeDetected && canGrabLedge)
+        {
+            canGrabLedge = false;
+
+            Vector2 ledgePosition = GetComponentInChildren<LedgeDetection>().transform.position;
+
+            climbBegunPosition = ledgePosition + offset1;
+            climbOverPosition = ledgePosition + offset2;
+
+            canClimb = true;
+        }
+
+        if (canClimb)
+        {
+            transform.position = climbBegunPosition;
+        }
+    }
     private void LedgeClimbMechanic()
     {
         canClimb = false;
@@ -159,14 +165,25 @@ public class Player : MonoBehaviour
 
     //Esta funcion por ser muy corta se puede usar => indicando que va a retornar un solo valor, en este caso un booleano
     private void AllowLedgeGrab() => canGrabLedge = true;
+#endregion
 
-    private void SlideMechanic()
+#region Player Movement
+    private void PlayerMovement()
     {
-        if (rb.velocity.x != 0  && slideCooldownCounter < 0)
+
+        if (isWallDetected)
         {
-            isSliding = true;
-            slideTimerCounter = slideTimer;
-            slideCooldownCounter = slideCooldown;
+            SpeedReset();
+            return;
+        }
+
+        if (isSliding)
+        {
+            rb.velocity = new Vector2(slideSpeed, rb.velocity.y);
+        }
+        else
+        {
+            rb.velocity = new Vector2(movementSpeed, rb.velocity.y);
         }
     }
     private void JumpMechanic()
@@ -188,6 +205,7 @@ public class Player : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, doubleJumpForce);
         }
     }
+
     private void CheckInput()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -200,6 +218,8 @@ public class Player : MonoBehaviour
             SlideMechanic();
         }
     }
+#endregion
+
     private void AnimatorControllers()
     {
         playerAnim.SetFloat("xVelocity", rb.velocity.x);
