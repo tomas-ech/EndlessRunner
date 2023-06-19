@@ -141,6 +141,7 @@ public class Player : MonoBehaviour
         if (ledgeDetected && canGrabLedge)
         {
             canGrabLedge = false;
+            rb.gravityScale = 0;
 
             Vector2 ledgePosition = GetComponentInChildren<LedgeDetection>().transform.position;
 
@@ -158,6 +159,7 @@ public class Player : MonoBehaviour
     private void LedgeClimbMechanic()
     {
         canClimb = false;
+        rb.gravityScale = 5;
         transform.position = climbOverPosition;
         //Invoke nos permite usar una funcion con cierto delay para empezar
         Invoke("AllowLedgeGrab", 0.1f);
@@ -229,7 +231,15 @@ public class Player : MonoBehaviour
         playerAnim.SetBool("canDoubleJump", canDoubleJump);
         playerAnim.SetBool("isSliding", isSliding);
         playerAnim.SetBool("canClimb", canClimb);
+        
+        if (rb.velocity.y < -20)
+        {
+            playerAnim.SetBool("canRoll", true);
+        }
     }
+
+    private void RollAnimationFinished() => playerAnim.SetBool("canRoll", false);
+
     private void CheckCollision()
     {
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
