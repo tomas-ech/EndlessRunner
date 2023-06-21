@@ -9,6 +9,10 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private Animator playerAnim;
 
+    [Header("Knockback Info")]
+    [SerializeField] private Vector2 knockbackDir;
+    private bool isKnocked;
+
     [Header("Speed Info")]
     [SerializeField] private float maxSpeed;
     [SerializeField] private float speedMultiplier;
@@ -77,6 +81,16 @@ public class Player : MonoBehaviour
         slideTimerCounter -= Time.deltaTime;
         slideCooldownCounter -= Time.deltaTime;
 
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            KnockbackMechanic();
+        }
+
+        if (isKnocked)
+        {
+            return;
+        }
+
         if (playerUnlocked)
         {
             PlayerMovement();
@@ -87,6 +101,14 @@ public class Player : MonoBehaviour
             canDoubleJump = true;
         }
     }
+
+    private void KnockbackMechanic()
+    {
+        isKnocked = true;
+        rb.velocity = knockbackDir;
+    }
+
+    private void CancelKnockback() => isKnocked = false;
 
 #region SpeedControll
     private void SpeedReset()
@@ -231,6 +253,7 @@ public class Player : MonoBehaviour
         playerAnim.SetBool("canDoubleJump", canDoubleJump);
         playerAnim.SetBool("isSliding", isSliding);
         playerAnim.SetBool("canClimb", canClimb);
+        playerAnim.SetBool("isKnocked", isKnocked);
         
         if (rb.velocity.y < -20)
         {
