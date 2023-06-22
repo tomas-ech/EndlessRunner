@@ -8,12 +8,17 @@ public class Player : MonoBehaviour
     //Components
     private Rigidbody2D rb;
     private Animator playerAnim;
-
+    private SpriteRenderer playerSprite;
+    private bool isDead;
+    [SerializeField] private bool playerUnlocked;
+    
     [Header("Knockback Info")]
     [SerializeField] private Vector2 knockbackDir;
     private bool isKnocked;
+    private bool canBeKnocked = true;
 
-    [Header("Speed Info")]
+    [Header("Move Info")]
+    [SerializeField] private float movementSpeed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float speedMultiplier;
     private float defaultMilestoneIncreaser;
@@ -22,10 +27,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float milestoneIncreaser;
     private float speedMilestone;
 
-
-    [Header("Move Info")]
-    [SerializeField] private bool playerUnlocked;
-    [SerializeField] private float movementSpeed;
+    [Header("Jump Info")]
     [SerializeField] private float jumpForce;
     [SerializeField] private float doubleJumpForce;
     private bool canDoubleJump;
@@ -63,6 +65,7 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         playerAnim = GetComponent<Animator>();
+        playerSprite = GetComponent<SpriteRenderer>();
 
         speedMilestone = milestoneIncreaser;
         defaultSpeed = movementSpeed;
@@ -81,15 +84,19 @@ public class Player : MonoBehaviour
         slideTimerCounter -= Time.deltaTime;
         slideCooldownCounter -= Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.K) && !isDead)
         {
             KnockbackMechanic();
         }
 
-        if (isKnocked)
+        if (Input.GetKeyDown(KeyCode.O) && !isDead)
         {
-            return;
+            StartCoroutine(DeadMechanic());
         }
+
+        if (isDead) {return;}
+
+        if (isKnocked) {return;}
 
         if (playerUnlocked)
         {
@@ -101,14 +108,66 @@ public class Player : MonoBehaviour
             canDoubleJump = true;
         }
     }
+    public void Damage()
+    {
+        if (movementSpeed >= maxSpeed)
+        {
+            KnockbackMechanic();
+        }
+        else {StartCoroutine(DeadMechanic());}
+    }
+    private IEnumerator DeadMechanic()
+    {
+        isDead = true;
+        canBeKnocked = false;
+        rb.velocity = knockbackDir;
+        playerAnim.SetBool("isDead", true);
+        yield return new WaitForSeconds(0.5f);
+        rb.velocity = Vector2.zero;
+    }
 
+    private IEnumerator Invincibility()
+    {
+         Color originalColor = playerSprite.color;
+         Color gettingHitColor = new Color(playerSprite.color.r, playerSprite.color.g, playerSprite.color.b, 0.4f);
+
+        canBeKnocked = false;
+        playerSprite.color = gettingHitColor;
+        yield return new WaitForSeconds(0.1f);
+
+        playerSprite.color = originalColor;
+        yield return new WaitForSeconds(0.1f);
+
+        playerSprite.color = gettingHitColor;
+        yield return new WaitForSeconds(0.15f);
+
+        playerSprite.color = originalColor;
+        yield return new WaitForSeconds(0.15f);
+
+        playerSprite.color = gettingHitColor;
+        yield return new WaitForSeconds(0.2f);
+
+        playerSprite.color = originalColor;
+        yield return new WaitForSeconds(0.2f);
+
+        playerSprite.color = gettingHitColor;
+        yield return new WaitForSeconds(0.25f);
+
+        playerSprite.color = originalColor;
+        canBeKnocked = true;
+    }
+
+#region Knockback Mechanic
     private void KnockbackMechanic()
     {
+        if (!canBeKnocked) {return;}
+        StartCoroutine(Invincibility());
         isKnocked = true;
         rb.velocity = knockbackDir;
     }
 
     private void CancelKnockback() => isKnocked = false;
+#endregion
 
 #region SpeedControll
     private void SpeedReset()
@@ -244,6 +303,7 @@ public class Player : MonoBehaviour
     }
 #endregion
 
+#region Animations
     private void AnimatorControllers()
     {
         playerAnim.SetFloat("xVelocity", rb.velocity.x);
@@ -262,6 +322,7 @@ public class Player : MonoBehaviour
     }
 
     private void RollAnimationFinished() => playerAnim.SetBool("canRoll", false);
+#endregion
 
     private void CheckCollision()
     {
