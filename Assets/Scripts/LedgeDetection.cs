@@ -35,13 +35,13 @@ public class LedgeDetection : MonoBehaviour
     {
         Collider2D[] colliders = Physics2D.OverlapBoxAll(boxCd.bounds.center, boxCd.size, 0);
 
-        /*foreach (var col in colliders)
+        foreach (var col in colliders)
         {
             if (col.gameObject.GetComponent<PlatformController>() != null)
             {
                 return;
             }
-        }*/
+        }
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {

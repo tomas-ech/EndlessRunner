@@ -321,7 +321,7 @@ public class Player : MonoBehaviour
         playerAnim.SetBool("canClimb", canClimb);
         playerAnim.SetBool("isKnocked", isKnocked);
         
-        if (rb.velocity.y < -20)
+        if (rb.velocity.y < -25)
         {
             playerAnim.SetBool("canRoll", true);
         }
