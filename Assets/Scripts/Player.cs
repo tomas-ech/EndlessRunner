@@ -108,6 +108,8 @@ public class Player : MonoBehaviour
             canDoubleJump = true;
         }
     }
+
+#region Damage and Die
     public void Damage()
     {
         if (movementSpeed >= maxSpeed)
@@ -122,8 +124,11 @@ public class Player : MonoBehaviour
         canBeKnocked = false;
         rb.velocity = knockbackDir;
         playerAnim.SetBool("isDead", true);
+
         yield return new WaitForSeconds(0.5f);
         rb.velocity = Vector2.zero;
+        yield return new WaitForSeconds(1f);
+        GameManager.instance.RestartLevel();
     }
 
     private IEnumerator Invincibility()
@@ -156,6 +161,7 @@ public class Player : MonoBehaviour
         playerSprite.color = originalColor;
         canBeKnocked = true;
     }
+#endregion
 
 #region Knockback Mechanic
     private void KnockbackMechanic()
