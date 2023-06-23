@@ -249,7 +249,7 @@ public class Player : MonoBehaviour
         rb.gravityScale = 5;
         transform.position = climbOverPosition;
         //Invoke nos permite usar una funcion con cierto delay para empezar
-        Invoke("AllowLedgeGrab", 0.1f);
+        Invoke("AllowLedgeGrab", 0.2f);
     }
 
     //Esta funcion por ser muy corta se puede usar => indicando que va a retornar un solo valor, en este caso un booleano
@@ -321,7 +321,7 @@ public class Player : MonoBehaviour
         playerAnim.SetBool("canClimb", canClimb);
         playerAnim.SetBool("isKnocked", isKnocked);
         
-        if (rb.velocity.y < -25)
+        if (rb.velocity.y < -20)
         {
             playerAnim.SetBool("canRoll", true);
         }

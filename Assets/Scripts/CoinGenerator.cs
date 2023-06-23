@@ -15,12 +15,13 @@ public class CoinGenerator : MonoBehaviour
     void Start()
     {
 
-        for (int i = 0; 0 < coinImg.Length; i++)
+        /*for (int i = 0; 0 < coinImg.Length; i++)
         {
             coinImg[i].sprite = null;
-        }
+        }*/
 
         amountOfCoins = Random.Range(minCoins, maxCoins);
+
         int additionalOffset = amountOfCoins / 2;
 
         for (int i = 0; i < amountOfCoins; i++)
