@@ -10,7 +10,8 @@ public class Player : MonoBehaviour
     private Animator playerAnim;
     private SpriteRenderer playerSprite;
     private bool isDead;
-    [SerializeField] private bool playerUnlocked;
+    [HideInInspector] public bool playerUnlocked;
+    [HideInInspector] public bool extraLife;
     
     [Header("Knockback Info")]
     [SerializeField] private Vector2 knockbackDir;
@@ -84,6 +85,8 @@ public class Player : MonoBehaviour
         slideTimerCounter -= Time.deltaTime;
         slideCooldownCounter -= Time.deltaTime;
 
+        extraLife = movementSpeed >= maxSpeed;
+
         if (Input.GetKeyDown(KeyCode.K) && !isDead)
         {
             KnockbackMechanic();
@@ -112,7 +115,7 @@ public class Player : MonoBehaviour
 #region Damage and Die
     public void Damage()
     {
-        if (movementSpeed >= maxSpeed)
+        if (extraLife)
         {
             KnockbackMechanic();
         }
@@ -168,6 +171,7 @@ public class Player : MonoBehaviour
     {
         if (!canBeKnocked) {return;}
         StartCoroutine(Invincibility());
+        SpeedReset();
         isKnocked = true;
         rb.velocity = knockbackDir;
     }
@@ -321,7 +325,7 @@ public class Player : MonoBehaviour
         playerAnim.SetBool("canClimb", canClimb);
         playerAnim.SetBool("isKnocked", isKnocked);
         
-        if (rb.velocity.y < -20)
+        if (rb.velocity.y < -25)
         {
             playerAnim.SetBool("canRoll", true);
         }
