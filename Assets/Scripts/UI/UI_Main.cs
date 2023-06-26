@@ -16,6 +16,8 @@ public class UI_Main : MonoBehaviour
     {
         SwitchMenu(mainMenu);
         Time.timeScale = 1;
+        lastScoreText.text = "Last Score: " + PlayerPrefs.GetFloat("LastScore").ToString("#,#");
+        highScoreText.text = "Best Score: " + PlayerPrefs.GetFloat("HighScore").ToString("#,#");
     }
 
     public void SwitchMenu(GameObject uiMenu)
@@ -26,6 +28,8 @@ public class UI_Main : MonoBehaviour
         }
 
         uiMenu.SetActive(true);
+
+        totalCoinsText.text = PlayerPrefs.GetInt("Coins").ToString("F0");
     }
 
     public void StartGame() => GameManager.instance.UnlockPlayer();

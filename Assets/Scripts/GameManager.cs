@@ -31,7 +31,11 @@ public class GameManager : MonoBehaviour
     }
 
     public void UnlockPlayer() => playerScript.playerUnlocked = true;
-    public void RestartLevel() => SceneManager.LoadScene(0);
+    public void RestartLevel()
+    {
+        Save();
+        SceneManager.LoadScene(0);
+    }
 
     public void Save()
     {
@@ -41,7 +45,9 @@ public class GameManager : MonoBehaviour
         //Aqui guardamos los coins cargados mas los nuevos obtenidos
         PlayerPrefs.SetInt("Coins", savedCoins + coins);
 
-        float score = distance * coins;
+        float score = (distance * coins)/100;
+
+        PlayerPrefs.SetFloat("LastScore", score);
 
         float lastScore = PlayerPrefs.GetFloat("LastScore", score);
 
