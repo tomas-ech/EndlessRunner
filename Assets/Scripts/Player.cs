@@ -131,6 +131,7 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         rb.velocity = Vector2.zero;
         yield return new WaitForSeconds(1f);
+        GameManager.instance.Save();
         GameManager.instance.RestartLevel();
     }
 
