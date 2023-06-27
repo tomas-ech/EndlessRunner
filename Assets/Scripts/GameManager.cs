@@ -10,8 +10,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Color Info")]
     public Color platformColor;
-    public Color playerColor = Color.white;
-
 
     [Header("Score Info")]
     public int coins;
@@ -21,7 +19,28 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        LoadColor();
     }
+
+    public void SaveColor(float r, float g, float b)
+    {
+        PlayerPrefs.SetFloat("ColorR", r);
+        PlayerPrefs.SetFloat("ColorG", g);
+        PlayerPrefs.SetFloat("ColorB", b);
+    }
+
+    private void LoadColor()
+    {
+        SpriteRenderer sr = playerScript.GetComponent<SpriteRenderer>();
+
+        Color newColor = new Color(PlayerPrefs.GetFloat("ColorR"),
+                                    PlayerPrefs.GetFloat("ColorG"),
+                                    PlayerPrefs.GetFloat("ColorB"),
+                                    PlayerPrefs.GetFloat("ColorA", 1));
+
+        sr.color = newColor;
+    }
+
     private void Update()
     {
         if (playerScript.transform.position.x > distance)
@@ -55,6 +74,10 @@ public class GameManager : MonoBehaviour
         {
             PlayerPrefs.SetFloat("HighScore", score);
         }
+
+        PlayerPrefs.SetFloat("ColorR", 1);
+        PlayerPrefs.SetFloat("ColorG", 1);
+        PlayerPrefs.SetFloat("ColorB", 1);
     }
 
 
