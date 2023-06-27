@@ -1,4 +1,4 @@
-using System;
+//using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -123,15 +123,17 @@ public class Player : MonoBehaviour
     }
     private IEnumerator DeadMechanic()
     {
+        AudioManager.instance.PlaySFX(3);
         isDead = true;
         canBeKnocked = false;
         rb.velocity = knockbackDir;
         playerAnim.SetBool("isDead", true);
 
+        Time.timeScale = 0.6f;
+
         yield return new WaitForSeconds(0.5f);
         rb.velocity = Vector2.zero;
-        yield return new WaitForSeconds(1f);
-        GameManager.instance.RestartLevel();
+        GameManager.instance.GameEnded();
     }
 
     private IEnumerator Invincibility()
@@ -291,10 +293,12 @@ public class Player : MonoBehaviour
         if (isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            AudioManager.instance.PlaySFX(Random.Range(1,2));
         }
         else if (canDoubleJump)
         {
             canDoubleJump = false;
+            AudioManager.instance.PlaySFX(Random.Range(1,2));
             rb.velocity = new Vector2(rb.velocity.x, doubleJumpForce);
         }
     }

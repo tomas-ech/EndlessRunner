@@ -9,6 +9,7 @@ public class Coin : MonoBehaviour
         //esta codicion es igual que poner other.tag == "Player" solo que en vez de revisar un tag, revisa si el objeto que toca tiene el componente Player, esto evita poner mal el nombre del tag
         if (other.GetComponent<Player>() != null)
         {
+            AudioManager.instance.PlaySFX(0);
             GameManager.instance.coins++;
             Destroy(gameObject);
         }

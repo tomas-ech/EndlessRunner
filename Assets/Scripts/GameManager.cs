@@ -5,8 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public Player playerScript;
     public static GameManager instance;
+    public Player playerScript;
+    public UI_Main ui;
 
     [Header("Color Info")]
     public Color platformColor;
@@ -14,11 +15,13 @@ public class GameManager : MonoBehaviour
     [Header("Score Info")]
     public int coins;
     public float distance;
+    public float score;
     
 
     private void Awake()
     {
         instance = this;
+        Time.timeScale = 1;
         LoadColor();
     }
 
@@ -52,7 +55,6 @@ public class GameManager : MonoBehaviour
     public void UnlockPlayer() => playerScript.playerUnlocked = true;
     public void RestartLevel()
     {
-        Save();
         SceneManager.LoadScene(0);
     }
 
@@ -64,7 +66,7 @@ public class GameManager : MonoBehaviour
         //Aqui guardamos los coins cargados mas los nuevos obtenidos
         PlayerPrefs.SetInt("Coins", savedCoins + coins);
 
-        float score = (distance * coins)/100;
+        score = (distance * coins)/100;
 
         PlayerPrefs.SetFloat("LastScore", score);
 
@@ -80,5 +82,10 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetFloat("ColorB", 1);
     }
 
+    public void GameEnded()
+    {
+        Save();
+        ui.OpenEndGameUI();
+    }
 
 }

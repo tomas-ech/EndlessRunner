@@ -8,6 +8,9 @@ public class UI_Main : MonoBehaviour
     private bool gamePaused;
 
     [SerializeField] private GameObject mainMenu;
+    [SerializeField] private GameObject endGame;
+    [Space]
+
     [SerializeField] private TextMeshProUGUI lastScoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private TextMeshProUGUI totalCoinsText;
@@ -15,9 +18,9 @@ public class UI_Main : MonoBehaviour
     private void Start()
     {
         SwitchMenu(mainMenu);
-        Time.timeScale = 1;
-        lastScoreText.text = "Last Score: " + PlayerPrefs.GetFloat("LastScore").ToString("#,#");
-        highScoreText.text = "Best Score: " + PlayerPrefs.GetFloat("HighScore").ToString("#,#");
+        
+        lastScoreText.text = "Last Score: " + PlayerPrefs.GetFloat("LastScore").ToString("F0");
+        highScoreText.text = "Best Score: " + PlayerPrefs.GetFloat("HighScore").ToString("F0");
     }
 
     public void SwitchMenu(GameObject uiMenu)
@@ -28,6 +31,8 @@ public class UI_Main : MonoBehaviour
         }
 
         uiMenu.SetActive(true);
+
+        AudioManager.instance.PlaySFX(4);
 
         totalCoinsText.text = PlayerPrefs.GetInt("Coins").ToString("F0");
     }
@@ -49,5 +54,10 @@ public class UI_Main : MonoBehaviour
     }
 
     public void RestartGame() => GameManager.instance.RestartLevel();
+
+    public void OpenEndGameUI()
+    {
+        SwitchMenu(endGame);
+    }
 
 }
