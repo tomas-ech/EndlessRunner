@@ -12,6 +12,7 @@ public class UI_InGame : MonoBehaviour
 
     [SerializeField] private Image heartEmpty;
     [SerializeField] private Image heartFull;
+    [SerializeField] private Image slideCD;
 
     void Start()
     {
@@ -21,6 +22,8 @@ public class UI_InGame : MonoBehaviour
 
     private void UpdateInfo()
     {
+        slideCD.enabled = playerScript.slideCooldownCounter < 0;
+        
         distanceText.text = GameManager.instance.distance.ToString("F0") + " m";
         coinsText.text = GameManager.instance.coins.ToString();
         

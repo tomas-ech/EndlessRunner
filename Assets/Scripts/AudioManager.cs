@@ -34,6 +34,7 @@ public class AudioManager : MonoBehaviour
     {
         if (index< sfx.Length)
         {
+            sfx[index].pitch = Random.Range(0.85f, 1.15f);
             sfx[index].Play();
         }
     }

@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float slideSpeed;
     [SerializeField] private float slideTimer;
     [SerializeField] private float slideCooldown;
-    private float slideCooldownCounter;
+    [HideInInspector] public float slideCooldownCounter;
     private float slideTimerCounter;
     private bool isSliding;
 
@@ -75,6 +75,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (!playerUnlocked) {return;}
+
         CheckCollision();
         AnimatorControllers();
         SpeedController();
@@ -117,6 +119,7 @@ public class Player : MonoBehaviour
     {
         if (extraLife)
         {
+            SpeedReset();
             KnockbackMechanic();
         }
         else {StartCoroutine(DeadMechanic());}
@@ -138,8 +141,8 @@ public class Player : MonoBehaviour
 
     private IEnumerator Invincibility()
     {
-         Color originalColor = playerSprite.color;
-         Color gettingHitColor = new Color(playerSprite.color.r, playerSprite.color.g, playerSprite.color.b, 0.4f);
+        Color originalColor = playerSprite.color;
+        Color gettingHitColor = new Color(playerSprite.color.r, playerSprite.color.g, playerSprite.color.b, 0.4f);
 
         canBeKnocked = false;
         playerSprite.color = gettingHitColor;
@@ -172,8 +175,8 @@ public class Player : MonoBehaviour
     private void KnockbackMechanic()
     {
         if (!canBeKnocked) {return;}
+
         StartCoroutine(Invincibility());
-        SpeedReset();
         isKnocked = true;
         rb.velocity = knockbackDir;
     }
@@ -217,7 +220,7 @@ public class Player : MonoBehaviour
             isSliding = false;
         }
     }
-    private void SlideMechanic()
+    public void SlideMechanic()
     {
         if (rb.velocity.x != 0  && slideCooldownCounter < 0)
         {
@@ -281,7 +284,7 @@ public class Player : MonoBehaviour
             rb.velocity = new Vector2(movementSpeed, rb.velocity.y);
         }
     }
-    private void JumpMechanic()
+    public void JumpMechanic()
     {
 
         if (isSliding)
