@@ -12,6 +12,10 @@ public class Player : MonoBehaviour
     private bool isDead;
     [HideInInspector] public bool playerUnlocked;
     [HideInInspector] public bool extraLife;
+
+    [Header("VFX")]
+    [SerializeField] private ParticleSystem dustParticle;
+    private bool readyToLand;
     
     [Header("Knockback Info")]
     [SerializeField] private Vector2 knockbackDir;
@@ -76,7 +80,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (!playerUnlocked) {return;}
+        if (!playerUnlocked) { return; }
+        if (isDead) { return; }
 
         CheckCollision();
         AnimatorControllers();
@@ -84,15 +89,14 @@ public class Player : MonoBehaviour
         CheckForSlide();
         CheckForLedge();
         CheckInput();
+        CheckForDustVFX();
 
         slideTimerCounter -= Time.deltaTime;
         slideCooldownCounter -= Time.deltaTime;
 
         extraLife = movementSpeed >= speedToSurvive;
 
-        if (isDead) {return;}
-
-        if (isKnocked) {return;}
+        if (isKnocked) { return; }
 
         if (playerUnlocked)
         {
@@ -105,7 +109,18 @@ public class Player : MonoBehaviour
         }
     }
 
-#region Damage and Die
+    private void CheckForDustVFX()
+    {
+        if (rb.velocity.y < -5 && !isGrounded) { readyToLand = true; }
+
+        if (readyToLand && isGrounded)
+        {
+            dustParticle.Play();
+            readyToLand = false;
+        }
+    }
+
+    #region Damage and Die
     public void Damage()
     {
         if (extraLife)
@@ -215,6 +230,8 @@ public class Player : MonoBehaviour
     }
     public void SlideMechanic()
     {
+        if (isDead) {return;}
+
         if (rb.velocity.x != 0  && slideCooldownCounter < 0)
         {
             isSliding = true;
@@ -280,7 +297,7 @@ public class Player : MonoBehaviour
     public void JumpMechanic()
     {
 
-        if (isSliding)
+        if (isSliding || isDead)
         {
             return; //Al poner return en este condicional, los demas condicionales
             //en esta misma funcion no se van a activar
