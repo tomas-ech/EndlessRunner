@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 9120502185727815181}
   - component: {fileID: 9120502185727815182}
   - component: {fileID: 9120502185727815178}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MovingTrap
   m_TagString: Untagged
   m_Icon: {fileID: 0}

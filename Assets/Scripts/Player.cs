@@ -150,6 +150,7 @@ public class Player : MonoBehaviour
         Color originalColor = playerSprite.color;
         Color gettingHitColor = new Color(playerSprite.color.r, playerSprite.color.g, playerSprite.color.b, 0.4f);
 
+        SpeedReset();
         canBeKnocked = false;
         playerSprite.color = gettingHitColor;
         yield return new WaitForSeconds(0.1f);
