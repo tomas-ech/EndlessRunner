@@ -8,6 +8,7 @@ public class DeadZone : MonoBehaviour
     {
         if (other.GetComponent<Player>() != null)
         {
+            AudioManager.instance.PlaySFX(3);
             GameManager.instance.GameEnded();
         }
     }

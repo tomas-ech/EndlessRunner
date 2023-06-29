@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private bool canBeKnocked = true;
 
     [Header("Move Info")]
+    [SerializeField] private float speedToSurvive = 18;
     [SerializeField] private float movementSpeed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float speedMultiplier;
@@ -87,17 +88,7 @@ public class Player : MonoBehaviour
         slideTimerCounter -= Time.deltaTime;
         slideCooldownCounter -= Time.deltaTime;
 
-        extraLife = movementSpeed >= maxSpeed;
-
-        if (Input.GetKeyDown(KeyCode.K) && !isDead)
-        {
-            KnockbackMechanic();
-        }
-
-        if (Input.GetKeyDown(KeyCode.O) && !isDead)
-        {
-            StartCoroutine(DeadMechanic());
-        }
+        extraLife = movementSpeed >= speedToSurvive;
 
         if (isDead) {return;}
 
@@ -187,6 +178,8 @@ public class Player : MonoBehaviour
 #region SpeedControll
     private void SpeedReset()
     {
+        if (isSliding) {return;}
+
         movementSpeed = defaultSpeed;
         milestoneIncreaser = defaultMilestoneIncreaser;
     }
@@ -292,6 +285,8 @@ public class Player : MonoBehaviour
             return; //Al poner return en este condicional, los demas condicionales
             //en esta misma funcion no se van a activar
         }
+
+        RollAnimationFinished();
 
         if (isGrounded)
         {

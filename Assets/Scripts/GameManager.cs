@@ -25,6 +25,13 @@ public class GameManager : MonoBehaviour
         LoadColor();
     }
 
+    private void Start()
+    {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 120;
+
+    }
+
     public void SaveColor(float r, float g, float b)
     {
         PlayerPrefs.SetFloat("ColorR", r);
