@@ -7,6 +7,7 @@ public class LedgeDetection : MonoBehaviour
     [SerializeField] private float radius;
     [SerializeField] private Player player;
     [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private Enemy enemy;
 
     private bool canDetected;
 
@@ -14,9 +15,14 @@ public class LedgeDetection : MonoBehaviour
 
     void Update()
     {
-        if (canDetected)
+        if (player != null && canDetected)
         {
             player.ledgeDetected = Physics2D.OverlapCircle(transform.position, radius, whatIsGround);
+        }
+        
+        if (enemy != null && canDetected)
+        {
+            enemy.ledgeDetected = Physics2D.OverlapCircle(transform.position, radius, whatIsGround);
         }
     }
 

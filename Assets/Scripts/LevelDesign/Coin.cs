@@ -13,5 +13,10 @@ public class Coin : MonoBehaviour
             GameManager.instance.coins++;
             Destroy(gameObject);
         }
+
+        if (other.GetComponent<Enemy>() != null)
+        {
+            Destroy(gameObject);
+        }
     }
 }

@@ -51,6 +51,12 @@ public class UI_Main : MonoBehaviour
         totalCoinsText.text = PlayerPrefs.GetInt("Coins").ToString("F0");
     }
 
+    public void SwitchSkybox(int index)
+    {
+        AudioManager.instance.PlaySFX(4);
+        GameManager.instance.SetupSkybox(index);
+    }
+
     public void MuteButton()
     {
         gameMuted = !gameMuted;

@@ -9,7 +9,10 @@ public class GameManager : MonoBehaviour
     public Player playerScript;
     public UI_Main ui;
 
-    [Header("Color Info")]
+    [Header("Skybox Materials")]
+    [SerializeField] private Material[] skyboxMat;
+
+    [Header("Purchased Color Info")]
     public Color platformColor;
 
     [Header("Score Info")]
@@ -22,14 +25,24 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         Time.timeScale = 1;
-        LoadColor();
+
+        SetupSkybox(PlayerPrefs.GetInt("SkyboxStting"));
+
+        //LoadColor();
     }
 
     private void Start()
     {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 120;
+    }
 
+    public void SetupSkybox(int i)
+    {
+        if (i <= 1) {RenderSettings.skybox = skyboxMat[i];}
+        else {RenderSettings.skybox = skyboxMat[Random.Range(0, skyboxMat.Length)];}
+
+        PlayerPrefs.SetInt("SkyboxSetting", i);
     }
 
     public void SaveColor(float r, float g, float b)
